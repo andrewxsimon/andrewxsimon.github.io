@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 1: Colorizing the Prokudin-Gorskii Photo Collection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .text-space {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px dashed #ddd;
+            min-height: 150px;
+        }
+
+        .text-space h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .text-space p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .image-item {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .image-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .image-display {
+            width: 100%;
+            height: 300px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .image-display img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .image-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .displacement-info {
+            background: #e3f2fd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        .displacement-info h4 {
+            color: #1976d2;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .displacement-info p {
+            color: #555;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .green-displacement {
+            color: #2e7d32;
+            font-weight: 500;
+        }
+
+        .red-displacement {
+            color: #c62828;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .image-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Project 1: Colorizing the Prokudin-Gorskii Photo Collection</h1>
+            <p>Andrew Song</p>
+        </div>
+
+        <!-- Project Overview -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Project Overview</h2>
+            </div>
+
+            <div class="text-space">
+                <h3>📝 Brief Overview</h3>
+                <p>The goal of this project is to colorize images from the Prokudin-Gorskii photo collection. Each image is composed of three exposures taken through blue, green, and red filters. We can reconstruct the original image by aligning and stacking the grayscale images together.
+                    This project shows two ways of aligning the grayscale images together: a naive search approach and an image pyramid approach. I explore this colorizing process for JPG files as well as larger TIF files.
+                </p>
+            </div>
+
+            <div class="text-space">
+                <h3>📝 My Approach</h3>
+                <p>To evaluate the alignment of the images, I explored two metrics for image matching. The simplest one is Euclidean distance (or the L2 norm) which is the square root of the sum of squared differencs. A smaller distance indicates a more aligned image.
+                    Another metric is normalized cross-correlation (NCC) which is a dot product of two normalized image vectors. What separates this metric from the former metric is that the L2 norm is more susceptible to higher contrast images which the NCC handles better since the vectors are normalized.
+                    Thus I used the NCC metric for my colorization process.
+                    <br><br>
+                    The naive alignment approach exhaustively searches over a fixed window of possible displacements ([-15, 15] pixels) and finds the displacement with the optimal metric. The reason this approach is naive is that this will be very expensive on large files like the .TIFs in the collection. This can take over an hour a large image alone.
+                    <br><br>
+                    Thus for the larger images I use a Gaussian image pyramid approach for a faster search. I iteratively apply a Gaussian blur to smoothen out the image by taking a local average. Then the image is downsampled by 2 recursively until it is small enough for me to quickly implement the naive method.
+                    Then the computed shifts are scaled back up and refined at higher resolutions. This hierarchal approach ensures efficient and accurate alignment even for images with significant misalignment. To also help with realignment I crop the borders to only the middle 90% of the image to remove the unnecessary contrasted borders that can affect the alignment.
+                    <br><br>
+                    The displacements I have recorded for each image are written in terms of (dy, dx).
+                </p>
+            </div>
+        </div>
+
+        <!-- JPG Images Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">JPG Images</h2>
+            </div>
+
+            <div class="image-grid">
+                <div class="image-item">
+                    <div class="image-display">
+                        <img src="media/ncc_cathedral.jpg" alt="cathedral.jpg" loading="lazy">
+                    </div>
+                    <div class="image-title">cathedral.jpg</div>
+                    <div class="displacement-info">
+                        <h4>Channel Displacements:</h4>
+                        <p><span class="green-displacement">Green Channel Displacement:</span> (5,2)</p>
+                        <p><span class="red-displacement">Red Channel Displacement:</span> (12,3)</p>
+                    </div>
+                </div>
+
+                <div class="image-item">
+                    <div class="image-display">
+                        <img src="media/ncc_monastery.jpg" alt="monastery.jpg" loading="lazy">
+                    </div>
+                    <div class="image-title">monastery.jpg</div>
+                    <div class="displacement-info">
+                        <h4>Channel Displacements:</h4>
+                        <p><span class="green-displacement">Green Channel Displacement:</span> (-3,2)</p>
+                        <p><span class="red-displacement">Red Channel Displacement:</span> (3,2)</p>
+                    </div>
+                </div>
+
+                <div class="image-item">
+                    <div class="image-display">
+                        <img src="media/ncc_tobolsk.jpg" alt="tobolsk.jpg" loading="lazy">
+                    </div>
+                    <div class="image-title">tobolsk.jpg</div>
+                    <div class="displacement-info">
+                        <h4>Channel Displacements:</h4>
+                        <p><span class="green-displacement">Green Channel Displacement:</span> (3,3)</p>
+                        <p><span class="red-displacement">Red Channel Displacement:</span> (6,3)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TIF Images Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">TIF Images</h2>
+            </div>
+
+            <div class="image-grid">
+                <div class="image-item">
+                    <div class="image-display">
+                        <img src="media/church_pyramid.jpg" alt="church.tif" loading="lazy">
+                    </div>
+                    <div class="image-title">church.tif</div>
+                    <div class="displacement-info">
+                        <h4>Channel Displacements:</h4>
+                        <p><span class="green-displacement">Green Channel Displacement:</span> (25,4)</p>
+                        <p><span class="red-displacement">Red Channel Displacement:</span> (58,-4)</p>
+                    </div>
+                </div>
+
+                <div class="image-item">
+                    <div class="image-display">
+                        <img src="media/emir_pyramid.jpg" alt="emir.tif" loading="lazy">
+                    </div>
+                    <div class="image-title">emir.tif</div>
+                    <div class="displacement-info">
+                        <h4>Channel Displacements:</h4>
+                        <p><span class="green-displacement">Green Channel Displacement:</span> (49,24)</p>
+                        <p><span class="red-displacement">Red Channel Displacement:</span> (103,56)</p>
+                    </div>
+                </div>
+
+                <div class="image-item">
+                    <div class="image-display">
+                        <img src="media/harvesters_pyramid.jpg" alt="harvesters.tif" loading="lazy">
+                    </div>
+                    <div class="image-title">harvesters.tif</div>
+                    <div class="displacement-info">
+                        <h4>Channel Displacements:</h4>
+                        <p><span class="green-displacement">Green Channel Displacement:</span> (60,17)</p>
+                        <p><span class="red-displacement">Red Channel Displacement:</span> (124,14)</p>
+                    </div>
+                </div>
+
+                <div class="image-item">
+                    <div class="image-display">
+                        <img src="media/icon_pyramid.jpg" alt="icon.tif" loading="lazy">
+                    </div>
+                    <div class="image-title">icon.tif</div>
+                    <div class="displacement-info">
+                        <h4>Channel Displacements:</h4>
+                        <p><span class="green-displacement">Green Channel Displacement:</span> (41,17)</p>
+                        <p><span class="red-displacement">Red Channel Displacement:</span> (90,23)</p>
+                    </div>
+                </div>
+
+                <div class="image-item">
+                    <div class="image-display">
+                        <img src="media/italil_pyramid.jpg" alt="italil.tif" loading="lazy">
+                    </div>
+                    <div class="image-title">italil.tif</div>
+                    <div class="displacement-info">
+                        <h4>Channel Displacements:</h4>
+                        <p><span class="green-displacement">Green Channel Displacement:</span> (38,21)</p>
+                        <p><span class="red-displacement">Red Channel Displacement:</span> (76,35)</p>
+                    </div>
+                </div>
+
+                <div class="image-item">
+                    <div class="image-display">
+                        <img src="media/lastochikino_pyramid.jpg" alt="lastochikino.tif" loading="lazy">
+                    </div>
+                    <div class="image-title">lastochikino.tif</div>
+                    <div class="displacement-info">
+                        <h4>Channel Displacements:</h4>
+                        <p><span class="green-displacement">Green Channel Displacement:</span> (-3,-2)</p>
+                        <p><span class="red-displacement">Red Channel Displacement:</span> (75,-8)</p>
+                    </div>
+                </div>
+
+                <div class="image-item">
+                    <div class="image-display">
+                        <img src="media/lugano_pyramid.jpg" alt="lugano.tif" loading="lazy">
+                    </div>
+                    <div class="image-title">lugano.tif</div>
+                    <div class="displacement-info">
+                        <h4>Channel Displacements:</h4>
+                        <p><span class="green-displacement">Green Channel Displacement:</span> (41,-16)</p>
+                        <p><span class="red-displacement">Red Channel Displacement:</span> (92,-29)</p>
+                    </div>
+                </div>
+
+                <div class="image-item">
+                    <div class="image-display">
+                        <img src="media/melons_pyramid.jpg" alt="melons.tif" loading="lazy">
+                    </div>
+                    <div class="image-title">melons.tif</div>
+                    <div class="displacement-info">
+                        <h4>Channel Displacements:</h4>
+                        <p><span class="green-displacement">Green Channel Displacement:</span> (82,10)</p>
+                        <p><span class="red-displacement">Red Channel Displacement:</span> (155,11)</p>
+                    </div>
+                </div>
+
+                <div class="image-item">
+                    <div class="image-display">
+                        <img src="media/self_portrait_pyramid.jpg" alt="self_portrait.tif" loading="lazy">
+                    </div>
+                    <div class="image-title">self_portrait.tif</div>
+                    <div class="displacement-info">
+                        <h4>Channel Displacements:</h4>
+                        <p><span class="green-displacement">Green Channel Displacement:</span> (79,29)</p>
+                        <p><span class="red-displacement">Red Channel Displacement:</span> (155,34)</p>
+                    </div>
+                </div>
+
+                <div class="image-item">
+                    <div class="image-display">
+                        <img src="media/siren_pyramid.jpg" alt="siren.tif" loading="lazy">
+                    </div>
+                    <div class="image-title">siren.tif</div>
+                    <div class="displacement-info">
+                        <h4>Channel Displacements:</h4>
+                        <p><span class="green-displacement">Green Channel Displacement:</span> (49,-6)</p>
+                        <p><span class="red-displacement">Red Channel Displacement:</span> (96,-25)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Own Collection Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">My Own Collection</h2>
+            </div>
+
+            <div class="image-grid">
+                <div class="image-item">
+                    <div class="image-display">
+                        <img src="media/daniia_pyramid.jpg" alt="daniia.tif" loading="lazy">
+                    </div>
+                    <div class="image-title">daniia.tif</div>
+                    <div class="displacement-info">
+                        <h4>Channel Displacements:</h4>
+                        <p><span class="green-displacement">Green Channel Displacement:</span> (59,6)</p>
+                        <p><span class="red-displacement">Red Channel Displacement:</span> (124,-6)</p>
+                    </div>
+                </div>
+
+                <div class="image-item">
+                    <div class="image-display">
+                        <img src="media/railroad_pyramid.jpg" alt="railroad.tif" loading="lazy">
+                    </div>
+                    <div class="image-title">railroad.tif</div>
+                    <div class="displacement-info">
+                        <h4>Channel Displacements:</h4>
+                        <p><span class="green-displacement">Green Channel Displacement:</span> (34,-14)</p>
+                        <p><span class="red-displacement">Red Channel Displacement:</span> (121,-25)</p>
+                    </div>
+                </div>
+
+                <div class="image-item">
+                    <div class="image-display">
+                        <img src="media/uglovaia_pyramid.jpg" alt="uglovaia.tif" loading="lazy">
+                    </div>
+                    <div class="image-title">uglovaia.tif</div>
+                    <div class="displacement-info">
+                        <h4>Channel Displacements:</h4>
+                        <p><span class="green-displacement">Green Channel Displacement:</span> (28,6)</p>
+                        <p><span class="red-displacement">Red Channel Displacement:</span> (104,12)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
