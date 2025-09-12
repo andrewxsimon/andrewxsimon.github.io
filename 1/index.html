@@ -199,7 +199,7 @@
                     <br><br>
                     The naive alignment approach exhaustively searches over a fixed window of possible displacements ([-15, 15] pixels) and finds the displacement with the optimal metric. The reason this approach is naive is that this will be very expensive on large files like the .TIFs in the collection. This can take over an hour a large image alone.
                     <br><br>
-                    Thus for the larger images I use a Gaussian image pyramid approach for a faster search. I iteratively apply a Gaussian blur to smoothen out the image by taking a local average. Then the image is downsampled by 2 recursively until it is small enough for me to quickly implement the naive method.
+                    Thus for the larger images I use a Gaussian image pyramid approach for a faster search. In a Gaussian pyramid, subsequent images are weighted down using a Gaussian blur and scaled down. I iteratively apply a Gaussian blur to smoothen out the image by taking a local average. Then the image is downsampled by 2 recursively until it is small enough for me to quickly implement the naive method.
                     Then the computed shifts are scaled back up and refined at higher resolutions. This hierarchal approach ensures efficient and accurate alignment even for images with significant misalignment. To also help with realignment I crop the borders to only the middle 90% of the image to remove the unnecessary contrasted borders that can affect the alignment.
                     <br><br>
                     The displacements I have recorded for each image are written in terms of (dy, dx).
