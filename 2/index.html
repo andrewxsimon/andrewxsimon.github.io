@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 2: Fun with Filters and Frequencies</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subsection {
+            margin-bottom: 40px;
+        }
+
+        .subsection-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .text-space {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px dashed #ddd;
+            min-height: 100px;
+        }
+
+        .text-space h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .text-space p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .image-item {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .image-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .image-display {
+            width: 100%;
+            height: 300px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .image-display img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .hybrid-section {
+            margin-bottom: 30px;
+        }
+
+        .hybrid-title {
+            font-size: 1.4rem;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .sigma-values {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .image-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .subsection-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Project 2: Fun with Filters and Frequencies</h1>
+            <p>Andrew Song</p>
+        </div>
+
+        <!-- Part 1.1: Convolutions from Scratch! -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Part 1.1: Convolutions from Scratch!</h2>
+            </div>
+
+            <div class="subsection">
+                <div class="image-grid">
+                    <div class="image-item">
+                        <div class="image-display">
+                            <img src="media/1.1Convolution.png" alt="Convolution Results" loading="lazy">
+                        </div>
+                    </div>
+
+                    <div class="image-item">
+                        <div class="image-display">
+                            <img src="media/1.1SelfConvolution.png" alt="Self Convolution Results" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-space">
+                    <h4>📊 Runtime Analysis</h4>
+                    <p>Four loop convolution: 40.9 seconds<br>
+                    Two loop convolution: 6.55 seconds<br>
+                    scipy.convolution2d: 0.56 seconds</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Part 1.2: Finite Difference Operator -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Part 1.2: Finite Difference Operator</h2>
+            </div>
+
+            <div class="subsection">
+                <div class="image-grid">
+                    <div class="image-item">
+                        <div class="image-display">
+                            <img src="media/1.2DxDy.png" alt="Dx and Dy Derivatives" loading="lazy">
+                        </div>
+                    </div>
+
+                    <div class="image-item">
+                        <div class="image-display">
+                            <img src="media/1.2Magnitude.png" alt="Gradient Magnitude" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Part 1.3: Derivative of Gaussian (DoG) Filter -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Part 1.3: Derivative of Gaussian (DoG) Filter</h2>
+            </div>
+
+            <div class="subsection">
+                <div class="image-grid">
+                    <div class="image-item">
+                        <div class="image-display">
+                            <img src="media/1.3DoG.png" alt="Derivative of Gaussian Filter" loading="lazy">
+                        </div>
+                    </div>
+
+                    <div class="image-item">
+                        <div class="image-display">
+                            <img src="media/1.3DxDy.png" alt="DoG Dx and Dy" loading="lazy">
+                        </div>
+                    </div>
+
+                    <div class="image-item">
+                        <div class="image-display">
+                            <img src="media/1.3Magnitude.png" alt="DoG Magnitude" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-space">
+                    <h4>📝 Analysis</h4>
+                    <p>The results from 1.2 and 1.3 are the exact same for Dx and Dy convolution.
+                        But the gradient magnitude analysis gives clearer edges.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Part 2.1: Image "Sharpening" -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Part 2.1: Image "Sharpening"</h2>
+            </div>
+
+            <div class="subsection">
+                <div class="text-space">
+                    <p>The unsharp mask filter that we are using is a controlled high-pass filter, built from a blur filter, that emphasizes high frequencies to make the image appear sharper.
+                        Blurring the image only gives you low frequencies and thus we can get the high frequencies by subtracting this blurred filter from the image. We then get a sharper image
+                        by adding those high frequencies back to the original image.
+                    </p>
+                </div>
+
+                <div class="image-grid">
+                    <div class="image-item">
+                        <div class="image-display">
+                            <img src="media/2.1Taj.png" alt="Taj Mahal Sharpening" loading="lazy">
+                        </div>
+                    </div>
+
+                    <div class="image-item">
+                        <div class="image-display">
+                            <img src="media/2.1Waterfall.png" alt="Waterfall Sharpening" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Part 2.2: Hybrid Images -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Part 2.2: Hybrid Images</h2>
+            </div>
+
+            <div class="text-space">
+                <p>This section showcases examples of hybrid images. This is done by blending in the high frequencies of one image to the low frequencies of another image.
+                    The sigma values shown in each pair of images are formatted in (high sigma, low sigma).    
+                </p>
+            </div>
+
+            <div class="subsection">
+                <div class="hybrid-section">
+                    <div class="hybrid-title">Derek-Nutmeg Hybrid</div>
+                    <div class="sigma-values">Sigma values: (4, 10)</div>
+                    <div class="text-space">
+                        <p>Here is the classic example of Derek and his former cat Nutmeg.</p>
+                    </div>
+                    <div class="image-grid">
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/2.2Nutmeg.png" alt="Derek-Nutmeg Hybrid" loading="lazy">
+                            </div>
+                        </div>
+
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/2.2FFT.png" alt="FFT Analysis" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hybrid-section">
+                    <div class="hybrid-title">Max "The Dutch Lion" Verstappen Hybrid</div>
+                    <div class="sigma-values">Sigma values: (3, 7)</div>
+                    <div class="text-space">
+                        <p>Here is one of the best F1 drivers Max Verstappen with an image of the lion which is what the community recognizes him as.</p>
+                    </div>
+                    <div class="image-grid">
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/2.2MaxLion.png" alt="Max Lion Hybrid" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hybrid-section">
+                    <div class="hybrid-title">1-100 Bill Hybrid</div>
+                    <div class="sigma-values">Sigma values: (7, 7)</div>
+                    <div class="text-space">
+                        <p>Here is a 1 dollar bill which I have with a 100 dollar bill which I wish I'd have.</p>
+                    </div>
+                    <div class="image-grid">
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/2.2Money.png" alt="Money Hybrid" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Part 2.3: Gaussian and Laplacian Stacks -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Part 2.3: Gaussian and Laplacian Stacks</h2>
+            </div>
+
+            <div class="text-space">
+                <p>This is a display of Gaussian and Laplacian stacks of the Oraple hybrid.</p>
+            </div>
+
+            <div class="subsection">
+                <div class="image-grid">
+                    <div class="image-item">
+                        <div class="image-display">
+                            <img src="media/2.3Apple.png" alt="Apple Stack" loading="lazy">
+                        </div>
+                    </div>
+
+                    <div class="image-item">
+                        <div class="image-display">
+                            <img src="media/2.3Orange.png" alt="Orange Stack" loading="lazy">
+                        </div>
+                    </div>
+
+                    <div class="image-item">
+                        <div class="image-display">
+                            <img src="media/2.3Oraple.png" alt="Oraple Laplacian Blending" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Part 2.4: Multiresolution Blending -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Part 2.4: Multiresolution Blending</h2>
+            </div>
+
+            <div class="text-space">
+                <p>We now implement multiresolution blending since the previous implementation leaves a very clear seam between the two images and there is no blending.</p>
+            </div>
+
+            <div class="subsection">
+                <div class="hybrid-section">
+                    <div class="hybrid-title">Oraple</div>
+                    <div class="text-space">
+                        <p>This is the Oraple example we saw previously but with multiresolution blending.</p>
+                    </div>
+                    <div class="image-grid">
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/apple.jpeg" alt="Apple" loading="lazy">
+                            </div>
+                        </div>
+
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/orange.jpeg" alt="Orange" loading="lazy">
+                            </div>
+                        </div>
+
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/2.4Oraple.png" alt="Oraple Blend" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hybrid-section">
+                    <div class="hybrid-title">Stitches on the Beach (Irregular Mask)</div>
+                    <div class="text-space">
+                        <p>This is my family cat Stitches on a top-down view of the beach. An editing tool was used to create a mask outlined by the shape of our cat.</p>
+                    </div>
+                    <div class="image-grid">
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/stitches.jpg" alt="Stitches" loading="lazy">
+                            </div>
+                        </div>
+
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/beach.jpg" alt="Beach" loading="lazy">
+                            </div>
+                        </div>
+
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/stitches_mask.jpg" alt="Stitches Mask" loading="lazy">
+                            </div>
+                        </div>
+
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/2.4Stitches.png" alt="Stitches Blend" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hybrid-section">
+                    <div class="hybrid-title">San Jose Sharks</div>
+                    <div class="text-space">
+                        <p>Here are the two jerseys (home and away) of the San Jose Sharks. The same editing app was used to make a specific mask although not irregular.
+                            This blending did not work well since the angle of the two jerseys did not align which causes an inconsistent mask shape. You can tell by the
+                            hockey stick in the middle of the logo not aligned.</p>
+                    </div>
+                    <div class="image-grid">
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/sharks_home.jpg" alt="Sharks Home" loading="lazy">
+                            </div>
+                        </div>
+
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/sharks_away.jpg" alt="Sharks Away" loading="lazy">
+                            </div>
+                        </div>
+
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/sharks_mask.jpg" alt="Sharks Mask" loading="lazy">
+                            </div>
+                        </div>
+
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/2.4Sharks.png" alt="Sharks Blend" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
