@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 3: Fun with Homographies</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subsection {
+            margin-bottom: 40px;
+        }
+
+        .subsection-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .text-space {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px dashed #ddd;
+            min-height: 100px;
+        }
+
+        .text-space h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .text-space p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .image-item {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .image-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .image-display {
+            width: 100%;
+            height: 300px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .image-display img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .comparison-section {
+            margin-bottom: 30px;
+        }
+
+        .comparison-title {
+            font-size: 1.4rem;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .image-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .subsection-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Project 3: (Auto) Stitching and Photo Mosaics</h1>
+            <p>Andrew Song</p>
+        </div>
+
+        <!-- A.1: Shoot the Pictures -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">A.1: Shoot the Pictures</h2>
+            </div>
+
+            <div class="subsection">
+                <div class="comparison-section">
+                    <div class="comparison-title">Apartment Images</div>
+                    <div class="image-grid">
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/apt1.jpg" alt="Apartment Image 1" loading="lazy">
+                            </div>
+                        </div>
+
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/apt2.jpg" alt="Apartment Image 2" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-section">
+                    <div class="comparison-title">Soda Images</div>
+                    <div class="image-grid">
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/soda1.jpg" alt="Soda Image 1" loading="lazy">
+                            </div>
+                        </div>
+
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/soda2.jpg" alt="Soda Image 2" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-section">
+                    <div class="comparison-title">Etcheverry Images</div>
+                    <div class="image-grid">
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/etch1.jpg" alt="Etcheverry Image 1" loading="lazy">
+                            </div>
+                        </div>
+
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/etch2.jpg" alt="Etcheverry Image 2" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- A.2: Recover Homographies -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">A.2: Recover Homographies</h2>
+            </div>
+
+            <div class="subsection">
+                <div class="image-grid" style="grid-template-columns: 1fr;">
+                    <div class="image-item">
+                        <div class="image-display">
+                            <img src="media/correspondences.png" alt="Correspondences" loading="lazy">
+                        </div>
+                    </div>
+
+                    <div class="image-item">
+                        <div class="image-display">
+                            <img src="media/proj3math.jpeg" alt="Homography Matrix Derivation" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- A.3: Warp the Images -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">A.3: Warp the Images</h2>
+            </div>
+
+            <div class="subsection">
+                <div class="comparison-section">
+                    <div class="comparison-title">Etcheverry Interpolation Comparison</div>
+                    <div class="image-grid">
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/etch_nearest.jpg" alt="Etcheverry Nearest Neighbor" loading="lazy">
+                            </div>
+                        </div>
+
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/etch_bilinear.jpg" alt="Etcheverry Bilinear Interpolation" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-section">
+                    <div class="comparison-title">Apartment Interpolation Comparison</div>
+                    <div class="image-grid">
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/apt_nearest.jpg" alt="Apartment Nearest Neighbor" loading="lazy">
+                            </div>
+                        </div>
+
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/apt_bilinear.jpg" alt="Apartment Bilinear Interpolation" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-space">
+                    <h4>📊 Interpolation Method Comparison</h4>
+                    <p>Nearest neighbor interpolation produces pixelated, blocky results with sharp edges between pixels, making it faster but lower quality. 
+                        Bilinear interpolation creates smoother transitions by averaging neighboring pixel values, resulting in more natural-looking images with better visual quality, though it requires more computational resources. Thus I ended up choosing bilinear interpolation for my mosaic blending.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- A.4: Blend the Images into a Mosaic -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">A.4: Blend the Images into a Mosaic</h2>
+            </div>
+
+            <div class="subsection">
+                <div class="text-space">
+                    <h4>📝 Mosaic Creation Process</h4>
+                    <p>The mosaic was produced by using weighted averaging of the images. The bounding box was determined by finding the corners of the warped first image and the unwarped second image.
+                        Then a new H_shift matrix was determined by the intrinsic translation matrix and the original H matrix. Then the real mosaic blending was done by warping the first image to this new H_shift matrix
+                        and stitching it to the unwarped second image. Since bilinear interpolation is used, there are no visible sharp edges between the images and the mosaic blending looks very smooth.
+                    </p>
+                </div>
+
+                <div class="image-grid">
+                    <div class="image-item">
+                        <div class="image-display">
+                            <img src="media/etch_mosaic.jpg" alt="Etcheverry Mosaic" loading="lazy">
+                        </div>
+                    </div>
+
+                    <div class="image-item">
+                        <div class="image-display">
+                            <img src="media/apt_mosaic.jpg" alt="Apartment Mosaic" loading="lazy">
+                        </div>
+                    </div>
+
+                    <div class="image-item">
+                        <div class="image-display">
+                            <img src="media/soda_mosaic.jpg" alt="Soda Mosaic" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
