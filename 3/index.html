@@ -336,6 +336,153 @@
                 </div>
             </div>
         </div>
+
+        <!-- B.1: Harris Corner Detection -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">B.1: Harris Corner Detection</h2>
+            </div>
+
+            <div class="subsection">
+                <div class="text-space">
+                    <p>For the rest of the project, we want to now implement automatic stitching via RANSAC homography.
+                        We refer to the paper “Multi-Image Matching using Multi-Scale Oriented Patches” by Brown et al. but with several simplifications.
+                        We first find Harris corners and then implement the ANMS algorithm to select the best corners.
+                    </p>
+                </div>
+
+                <div class="image-grid" style="grid-template-columns: 1fr;">
+                    <div class="image-item">
+                        <div class="image-display">
+                            <img src="media/harris_anms.png" alt="Harris Corner Detection" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- B.2: Feature Descriptor Extraction -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">B.2: Feature Descriptor Extraction</h2>
+            </div>
+
+            <div class="text-space">
+                <p>We then extract the feature descriptors for the corners using the SIFT algorithm.
+                    These are some of the normalized grayscale feature descriptors for the corners.
+                </p>
+            </div>
+
+            <div class="subsection">
+                <div class="image-grid" style="grid-template-columns: 1fr;">
+                    <div class="image-item">
+                        <div class="image-display">
+                            <img src="media/features.png" alt="Feature Descriptors" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- B.3: Feature Matching -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">B.3: Feature Matching</h2>
+            </div>
+
+            <div class="subsection">
+
+                <div class="text-space">
+                    <p>We now find the best matches for the corners using the normalized cross-correlation metric.
+                        We choose a ratio threshold of 0.7 to filter out bad matches.
+                    </p>
+                </div>
+
+                <div class="image-grid" style="grid-template-columns: 1fr;">
+                    <div class="image-item">
+                        <div class="image-display">
+                            <img src="media/matching.png" alt="Feature Matching" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- B.4: RANSAC for Robust Homography -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">B.4: RANSAC for Robust Homography</h2>
+            </div>
+
+            <div class="subsection">
+                <div class="text-space">
+                    <p>We now compare our results with the manual stitching results.
+                    </p>
+                </div>
+
+                <div class="comparison-section">
+                    <div class="comparison-title">Apartment Mosaic Comparison</div>
+                    <div class="image-grid">
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/apt_mosaic.jpg" alt="Apartment Manual Mosaic" loading="lazy">
+                            </div>
+                        </div>
+
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/apt_ransac.png" alt="Apartment RANSAC Mosaic" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-space">
+                        <p>I don't see that much of a difference here.</p>
+                    </div>
+                </div>
+
+                <div class="comparison-section">
+                    <div class="comparison-title">Etch-a-Sketch Mosaic Comparison</div>
+                    <div class="image-grid">
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/etch_mosaic.jpg" alt="Etch-a-Sketch Manual Mosaic" loading="lazy">
+                            </div>
+                        </div>
+
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/etch_ransac.png" alt="Etch-a-Sketch RANSAC Mosaic" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-space">
+                        <p>I don't see that much of a difference here.</p>
+                    </div>
+                </div>
+
+                <div class="comparison-section">
+                    <div class="comparison-title">Soda Mosaic Comparison</div>
+                    <div class="image-grid">
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/soda_mosaic.jpg" alt="Soda Manual Mosaic" loading="lazy">
+                            </div>
+                        </div>
+
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/soda_ransac.png" alt="Soda RANSAC Mosaic" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-space">
+                        <p>Clearly the RANSAC H matrix looks much different from the manual H matrix. The mosaic blending looks much more natural and smooth.
+                            The left bench in the manual stitching looks more stretched compared to that of the automatic mosaic.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
