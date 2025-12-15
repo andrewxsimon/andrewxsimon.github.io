@@ -171,8 +171,28 @@
             margin-bottom: 20px;
         }
 
+        .image-title {
+            text-align: center;
+            color: #333;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-top: 5px;
+            padding: 0 5px;
+        }
+
+        .row-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
         @media (max-width: 768px) {
             .image-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .row-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -220,38 +240,46 @@
             <div class="subsection">
                 <h3 class="subsection-title">Part 0: Setup</h3>
                 <div class="text-space">
-                    <p>Text content for Part 0 will be filled in here.</p>
+                    <p>I played around with the DeepFloyd diffusion model to generate images of my own prompts. I played with the number of inference steps and chose 20 and 100 (left and right side). The images with 100 inference steps
+                        looked to be higher quality. This makes sense since the quality of images increases with the number of steps the model takes. Here are 3 of the prompts I used.
+                    </p>
                 </div>
-                <div class="image-grid">
+                <div class="image-grid" style="grid-template-columns: repeat(2, 1fr);">
                     <div class="image-item">
                         <div class="image-display">
                             <img src="media/5a-0-hockey.png" alt="Hockey Original" loading="lazy">
                         </div>
+                        <div class="image-title">"a photo of a hockey player"</div>
                     </div>
                     <div class="image-item">
                         <div class="image-display">
                             <img src="media/5a-0-hockey-100.png" alt="Hockey Processed" loading="lazy">
                         </div>
+                        <div class="image-title">"a photo of a hockey player"</div>
                     </div>
                     <div class="image-item">
                         <div class="image-display">
                             <img src="media/5a-0-ramen.png" alt="Ramen Original" loading="lazy">
                         </div>
+                        <div class="image-title">"a bowl of ramen noodles"</div>
                     </div>
                     <div class="image-item">
                         <div class="image-display">
                             <img src="media/5a-0-ramen-100.png" alt="Ramen Processed" loading="lazy">
                         </div>
+                        <div class="image-title">"a bowl of ramen noodles"</div>
                     </div>
                     <div class="image-item">
                         <div class="image-display">
                             <img src="media/5a-0-tree.png" alt="Tree Original" loading="lazy">
                         </div>
+                        <div class="image-title">"an oil painting of a christmas tree"</div>
                     </div>
                     <div class="image-item">
                         <div class="image-display">
                             <img src="media/5a-0-tree-100.png" alt="Tree Processed" loading="lazy">
                         </div>
+                        <div class="image-title">"an oil painting of a christmas tree"</div>
                     </div>
                 </div>
             </div>
@@ -264,7 +292,9 @@
                 <div class="subsection">
                     <h4 class="subsection-title" style="font-size: 1.5rem;">Part 1.1: Implementing the Forward Process</h4>
                     <div class="text-space">
-                        <p>Text content for Part 1.1 will be filled in here.</p>
+                        <p>I implemented the forward process which takes a clean image and adds noise to it. Given a clean image x0, we achieve a noisy image xt at timestep t.
+                            Here are the images for the forward process at timesteps 250, 500, and 750.
+                        </p>
                     </div>
                     <div class="image-grid">
                         <div class="image-item">
@@ -354,7 +384,7 @@
                 <!-- Part 1.5: Diffusion Model Sampling -->
                 <div class="subsection">
                     <h4 class="subsection-title" style="font-size: 1.5rem;">Part 1.5: Diffusion Model Sampling</h4>
-                    <div class="image-grid">
+                    <div class="row-grid">
                         <div class="image-item">
                             <div class="image-display">
                                 <img src="media/5a-1-5-a.png" alt="Diffusion Sampling A" loading="lazy">
@@ -387,9 +417,11 @@
                 <div class="subsection">
                     <h4 class="subsection-title" style="font-size: 1.5rem;">Part 1.6: Classifier-Free Guidance (CFG)</h4>
                     <div class="text-space">
-                        <p>Text content for Part 1.6 will be filled in here.</p>
+                        <p>In order to improve the image quality, we can use a technique called classifier-free guidance (CFG). We compute both a conditional and unconditional noise estimate.
+                            We achieve a final noise estimate by using these two estimates and a guidance scale factor. We now achieve higher quality images compared to 1.5.
+                        </p>
                     </div>
-                    <div class="image-grid">
+                    <div class="row-grid">
                         <div class="image-item">
                             <div class="image-display">
                                 <img src="media/5a-1-6-a.png" alt="CFG Result A" loading="lazy">
@@ -475,7 +507,7 @@
                         </div>
                         <div class="image-item">
                             <div class="image-display">
-                                <img src="media/1-7-1-city.png" alt="Processed City Drawing" loading="lazy">
+                                <img src="media/5a-1-7-1-city.png" alt="Processed City Drawing" loading="lazy">
                             </div>
                         </div>
                     </div>
@@ -485,7 +517,16 @@
                 <div class="subsection">
                     <h4 class="subsection-title" style="font-size: 1.5rem;">Part 1.7.2: Inpainting</h4>
                     <div class="text-space">
-                        <p>Text content for Part 1.7.2 will be filled in here.</p>
+                        <p>We implement inpainting here where we can recreate a new image from the original image and a binary mask. The image will generate new content
+                            wherever the mask is equal to 1. Here I implement the mask to change the top of the Campanile, the inside of the CMS, and the water under the Bay Bridge.
+                        </p>
+                    </div>
+                    <div class="image-grid" style="grid-template-columns: 1fr;">
+                        <div class="image-item">
+                            <div class="image-display">
+                                <img src="media/5a-1-7-2-mask.png" alt="Inpainting Mask" loading="lazy">
+                            </div>
+                        </div>
                     </div>
                     <div class="image-grid">
                         <div class="image-item">
@@ -514,16 +555,19 @@
                             <div class="image-display">
                                 <img src="media/5a-1-7-3-campanile.png" alt="Text-Conditional Campanile" loading="lazy">
                             </div>
+                            <div class="image-title">"an oil painting of a christmas tree" from campanile</div>
                         </div>
                         <div class="image-item">
                             <div class="image-display">
                                 <img src="media/5a-1-7-3-cms.png" alt="Text-Conditional CMS" loading="lazy">
                             </div>
+                            <div class="image-title">"a bowl of ramen noodles" from the CMS</div>
                         </div>
                         <div class="image-item">
                             <div class="image-display">
                                 <img src="media/5a-1-7-3-bridge.png" alt="Text-Conditional Bridge" loading="lazy">
                             </div>
+                            <div class="image-title">"a race car" from the Bay Bridge</div>
                         </div>
                     </div>
                 </div>
@@ -532,7 +576,10 @@
                 <div class="subsection">
                     <h4 class="subsection-title" style="font-size: 1.5rem;">Part 1.8: Visual Anagrams</h4>
                     <div class="text-space">
-                        <p>Text content for Part 1.8 will be filled in here.</p>
+                        <p>Now we can create optical illusions through visual anagrams. We denoise an original image xt with prompt p1.
+                            We denoise the flipped version of xt with prompt p2. We then combine the two images to create an optical illusion, where you can see a different thing
+                            when the image is upside down. Here are two examples I was able to generate.
+                        </p>
                     </div>
                     <div class="image-grid">
                         <div class="image-item">
@@ -552,18 +599,22 @@
                 <div class="subsection">
                     <h4 class="subsection-title" style="font-size: 1.5rem;">Part 1.9: Hybrid Images</h4>
                     <div class="text-space">
-                        <p>Text content for Part 1.9 will be filled in here.</p>
+                        <p>We are now able to make hybrid images by implementing factorized diffusion. We get noise estimates for our low pass and high pass filters and achieve a final noise estimate.
+                            Here are two hybrid images I was able to get.
+                        </p>
                     </div>
                     <div class="image-grid">
                         <div class="image-item">
                             <div class="image-display">
                                 <img src="media/5a-1-9-pyramid-waterfall.png" alt="Pyramid-Waterfall Hybrid" loading="lazy">
                             </div>
+                            <div class="image-title">"a lithograph of pyramids" and "a waterfall"</div>
                         </div>
                         <div class="image-item">
                             <div class="image-display">
                                 <img src="media/5a-1-9-sunset-basketball.png" alt="Sunset-Basketball Hybrid" loading="lazy">
                             </div>
+                            <div class="image-title">"a photo of a sunset" and "a basketball"</div>
                         </div>
                     </div>
                 </div>
@@ -584,7 +635,7 @@
                 <div class="subsection">
                     <h4 class="subsection-title" style="font-size: 1.5rem;">Part 1.1: Implementing the UNet</h4>
                     <div class="text-space">
-                        <p>Text content for Part 1.1 will be filled in here.</p>
+                        <p>We implement the denoiser as a UNet, which consists of a bunch of convolution layers with a few downsampling and upsampling blocks.</p>
                     </div>
                 </div>
 
@@ -592,7 +643,10 @@
                 <div class="subsection">
                     <h4 class="subsection-title" style="font-size: 1.5rem;">Part 1.2: Using the UNet to Train a Denoiser</h4>
                     <div class="text-space">
-                        <p>Text content for Part 1.2 will be filled in here.</p>
+                        <p>We can now train our denoiser for an MNIST dataset. We train our denoiser with a noisy image z while using our UNet model
+                            and the Adam optimizer. Below are some of our denoised results and training loss plots. We also show plots for denoising pure, random Gaussian noise
+                            and training our denoiser.
+                        </p>
                     </div>
                     <div class="image-grid" style="grid-template-columns: 1fr;">
                         <div class="image-item">
@@ -614,12 +668,7 @@
                         </div>
                         <div class="image-item">
                             <div class="image-display">
-                                <img src="media/5b1-2-1-ep5.png" alt="Training Epoch 5" loading="lazy">
-                            </div>
-                        </div>
-                        <div class="image-item">
-                            <div class="image-display">
-                                <img src="media/5b1-2-1-ep10.png" alt="Training Epoch 10" loading="lazy">
+                                <img src="media/5b-1-2-1-ep5.png" alt="Training Epoch 5" loading="lazy">
                             </div>
                         </div>
                     </div>
@@ -666,14 +715,19 @@
             <div class="subsection">
                 <h3 class="subsection-title">Part 2: Training a Flow Matching Model</h3>
                 <div class="text-space">
-                    <p>Text content for Part 2 will be filled in here.</p>
+                    <p>Since one-step denoising does not work well for generative tasks, we need to iteratively denoise the image and so we will implement flow matching.
+                        We train a UNet model to predict 'flow' from our noisy data to clean data. Our aim is to learn a UNet to approximate this flow u(xt, t)
+                    </p>
                 </div>
 
                 <!-- Part 2.1: Adding Time Conditioning to UNet -->
                 <div class="subsection">
                     <h4 class="subsection-title" style="font-size: 1.5rem;">Part 2.1: Adding Time Conditioning to UNet</h4>
                     <div class="text-space">
-                        <p>Text content for Part 2.1 will be filled in here.</p>
+                        <p>To add time-conditioning we inject a scalar t to fully-connected blocks. We can now train the UNet to predict the flow.
+                            We essentially pick a random image x1, a random timestep t, and add noise to x1 to get xt, then train the denoiser.
+                            We repeat the process for different images and different timesteps until the model converges. We then take samples of our UNet. 
+                        </p>
                     </div>
                 </div>
 
@@ -715,7 +769,10 @@
                 <div class="subsection">
                     <h4 class="subsection-title" style="font-size: 1.5rem;">Part 2.4: Adding Class-Conditioning to UNet</h4>
                     <div class="text-space">
-                        <p>Text content for Part 2.4 will be filled in here.</p>
+                        <p>To make theresults better, we can condition our UNet on the classes of the digits 0-9. We can now condition our UNet
+                            on a timestep t and a one-hot encoded class-conditioning vector c. The training and sampling process is similar to before, but now
+                            with improved results.
+                        </p>
                     </div>
                 </div>
 
